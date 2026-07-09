@@ -37,7 +37,7 @@ app.get("/api/daily-message", async (req, res) => {
   try {
     const ai = getAi();
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.5-flash-lite",
       contents: "Genera el MENSAJE DEL DÍA. Cuando el usuario carga la app, genera un mensaje motivador corto de máximo 3 líneas. Debe ser poderoso, accionable y específico. Evita frases genéricas. Termina siempre con una micro-acción concreta para los próximos 5 minutos. Varía el estilo cada vez: a veces usa una metáfora, a veces un dato, a veces una pregunta retórica.",
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -47,7 +47,11 @@ app.get("/api/daily-message", async (req, res) => {
     res.json({ message: response.text?.trim() });
   } catch (error: any) {
     console.error("Error generating daily message:", error);
-    res.status(500).json({ error: error.message || "No pudimos obtener tu mensaje del día. ¡Pero arranca de todas formas!" });
+    let errorMessage = "No pudimos obtener tu mensaje del día. ¡Pero arranca de todas formas!";
+    if (error.message && (error.message.includes("429") || error.message.includes("503"))) {
+      errorMessage = "El servicio está muy concurrido en este momento. Por favor, intenta de nuevo en unos segundos.";
+    }
+    res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -63,7 +67,7 @@ app.post("/api/confirm-goals", async (req, res) => {
     const prompt = `Mis metas para hoy son:\n${goals.map((g: string, i: number) => `${i + 1}. ${g}`).join('\n')}\n\nGenera la CONFIRMACIÓN DE METAS. Responde con un mensaje de confirmación breve y energético de 1 línea, y un micro-compromiso que sea la acción más pequeña posible para empezar con la primera meta en los próximos 10 minutos. Tono celebratorio pero enfocado en la acción inmediata.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.5-flash-lite",
       contents: prompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -93,7 +97,11 @@ app.post("/api/confirm-goals", async (req, res) => {
     }
   } catch (error: any) {
     console.error("Error confirming goals:", error);
-    res.status(500).json({ error: error.message || "Error al procesar las metas." });
+    let errorMessage = "Error al procesar las metas.";
+    if (error.message && (error.message.includes("429") || error.message.includes("503"))) {
+      errorMessage = "El servicio está muy concurrido. Por favor, intenta de nuevo en unos segundos.";
+    }
+    res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -109,7 +117,7 @@ app.post("/api/unblock", async (req, res) => {
     const prompt = `Estoy atascado. Esto es lo que me pasa:\n"${issue}"\n\nGenera el DESBLOQUEO. Analiza la situación y entrega exactamente esto en formato estructurado:\nCONSEJO PERSONALIZADO: 2 a 3 líneas con un consejo específico basado en lo que escribí. No genérico. Que sienta que me entendiste.\nPREGUNTA PODEROSA: Una sola pregunta que me haga reflexionar y ver mi situación diferente. Que sea incómoda pero justa.\nPLAN DE 3 PASOS: Paso 1 con acción concreta para los próximos 5 minutos. Paso 2 con acción para la próxima hora. Paso 3 con acción para cerrar el día con progreso.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.5-flash-lite",
       contents: prompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -151,7 +159,11 @@ app.post("/api/unblock", async (req, res) => {
     }
   } catch (error: any) {
     console.error("Error unblocking:", error);
-    res.status(500).json({ error: error.message || "Error al procesar tu bloqueo. Intenta de nuevo." });
+    let errorMessage = "Error al procesar tu bloqueo. Intenta de nuevo.";
+    if (error.message && (error.message.includes("429") || error.message.includes("503"))) {
+      errorMessage = "El servicio está muy concurrido. Por favor, intenta de nuevo en unos segundos.";
+    }
+    res.status(500).json({ error: errorMessage });
   }
 });
 
