@@ -1,0 +1,6 @@
+{
+  "name": "Kick",
+  "description": "Tu aliado diario para empezar con tus metas. Te motiva, te ayuda a definir micro-compromisos y te desbloquea cuando estás atascado.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
