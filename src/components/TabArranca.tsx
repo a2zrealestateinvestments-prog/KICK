@@ -10,11 +10,16 @@ export function TabArranca() {
     setLoading(true);
     try {
       const res = await fetch("/api/daily-message");
-      const data = await res.json();
-      if (data.message) {
-        setMessage(data.message);
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await res.json();
+        if (data.message) {
+          setMessage(data.message);
+        } else {
+          setMessage(data.error || "Hubo un error al cargar tu mensaje. ¡Arranca de todas formas!");
+        }
       } else {
-        setMessage(data.error || "Hubo un error al cargar tu mensaje. ¡Arranca de todas formas!");
+        setMessage("No pudimos conectar con el servidor. ¡Pero hoy es tu día para arrancar!");
       }
     } catch (error) {
       setMessage("No pudimos conectar. ¡Pero hoy es tu día para arrancar!");

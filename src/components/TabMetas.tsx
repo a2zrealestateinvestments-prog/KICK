@@ -38,11 +38,14 @@ export function TabMetas() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ goals: validGoals }),
       });
-      const data = await res.json();
-      
-      if (!res.ok) throw new Error(data.error || "Error al procesar las metas");
-      
-      setResult(data);
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Error al procesar las metas");
+        setResult(data);
+      } else {
+        throw new Error("El servidor no respondió correctamente. Intenta de nuevo.");
+      }
     } catch (err: any) {
       setError(err.message || "Ocurrió un error inesperado.");
     } finally {
