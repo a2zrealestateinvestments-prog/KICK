@@ -30,7 +30,7 @@ app.get("/api/health", (req, res) => {
 app.get("/api/daily-message", async (req, res) => {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: "Genera el MENSAJE DEL DÍA. Cuando el usuario carga la app, genera un mensaje motivador corto de máximo 3 líneas. Debe ser poderoso, accionable y específico. Evita frases genéricas. Termina siempre con una micro-acción concreta para los próximos 5 minutos. Varía el estilo cada vez: a veces usa una metáfora, a veces un dato, a veces una pregunta retórica.",
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -58,7 +58,7 @@ ${goals.map((g: string, i: number) => `${i + 1}. ${g}`).join('\\n')}
 Genera la CONFIRMACIÓN DE METAS. Responde con un mensaje de confirmación breve y energético de 1 línea, y un micro-compromiso que sea la acción más pequeña posible para empezar con la primera meta en los próximos 10 minutos. Tono celebratorio pero enfocado en la acción inmediata.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: prompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -109,7 +109,7 @@ PREGUNTA PODEROSA: Una sola pregunta que me haga reflexionar y ver mi situación
 PLAN DE 3 PASOS: Paso 1 con acción concreta para los próximos 5 minutos. Paso 2 con acción para la próxima hora. Paso 3 con acción para cerrar el día con progreso.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: prompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
